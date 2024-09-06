@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glucólisis: Aprendizaje Interactivo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6f61;
+            color: #fff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 30px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+        }
+        .btn:hover {
+            background: #ff8a80;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .question, .step {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #steps li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+        #steps li:hover {
+            background: #f9f9f9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .dragColumn {
+            display: inline-block;
+            vertical-align: top;
+            margin: 20px;
+            width: 30%;
+        }
+        .dragItem, .dropBox {
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .dragItem:hover, .dropBox:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .dropBox {
+            min-height: 50px;
+            min-width: 200px;
+        }
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        #result, #orderResult, #matchResult {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .dragColumn {
+            display: inline-block;
+            vertical-align: top;
+            margin: 20px;
+            width: 30%;
+        }
+        .dragItem {
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+        .dragItem:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .dropBox {
+            min-height: 50px;
+            min-width: 200px;
+            background: #f9f9f9;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+        .dropBox.hover {
+            background: #e6e6e6;
+            border-color: #999;
+        }
+        .matchPair {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .matchItem {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+            flex: 1;
+            margin: 0 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Glucólisis: El Proceso Vital de la Energía Celular</h1>
+    </header>
+
+    <div class="container" id="home">
+        <h2>Bienvenido al Mundo de la Glucólisis</h2>
+        <p>La glucólisis es una vía metabólica fundamental en la que una molécula de glucosa se descompone para formar dos moléculas de piruvato. Este proceso es esencial para la producción de energía en las células.</p>
+        <img src="glucolisis.jpg" alt="Diagrama de Glucólisis">
+        <button class="btn" onclick="showSection('quiz')">Iniciar Cuestionario</button>
+        <button class="btn" onclick="showSection('orderGame')">Ordenar el Ciclo</button>
+        <button class="btn" onclick="showSection('matchGame')">Emparejar Elementos</button>
+    </div>
+
+    <div class="container" id="quiz" style="display:none;">
+        <h2>Cuestionario sobre Glucólisis</h2>
+        <div id="questions"></div>
+        <button class="btn" onclick="checkAnswers()">Verificar Respuestas</button>
+        <div id="result"></div>
+        <button class="btn" onclick="showSection('home')">Volver al Inicio</button>
+    </div>
+
+    <div class="container" id="orderGame" style="display:none;">
+        <h2>Ordena los Pasos de la Glucólisis</h2>
+        <ul id="steps" class="sortable"></ul>
+        <button class="btn" onclick="checkOrder()">Verificar Orden</button>
+        <div id="orderResult"></div>
+        <button class="btn" onclick="showSection('home')">Volver al Inicio</button>
+    </div>
+
+ <div class="container" id="matchGame" style="display:none;"> <h2>Empareja los Elementos de la Glucólisis</h2> <div id="matchContainer"> <!-- Columna izquierda con los elementos de la derecha de la flecha, desordenados --> <div class="dragColumn" id="column1"> <div class="dragItem" draggable="true">Oxidación y fosforilación del gliceraldehído-3-fosfato</div> <div class="dragItem" draggable="true">Fosforilación de fructosa-6-fosfato</div> <div class="dragItem" draggable="true">Interconversión de triosas-fosfato</div> <div class="dragItem" draggable="true">Formación de 2-fosfoglicerato</div> <div class="dragItem" draggable="true">Formación de glucosa-6-fosfato</div> <div class="dragItem" draggable="true">Segunda fosforilación a nivel de sustrato</div> <div class="dragItem" draggable="true">Formación de lactato</div> <div class="dragItem" draggable="true">Fosforilación a nivel de sustrato</div> <div class="dragItem" draggable="true">Formación de triosas-fosfato</div> <div class="dragItem" draggable="true">Formación de fructosa-6-fosfato</div> <div class="dragItem" draggable="true">Formación de fosfoenolpiruvato</div> </div> <!-- Columna derecha con los elementos de la izquierda de la flecha, desordenados --> <div class="dragColumn" id="column2"> <div class="dragItem" draggable="true">Esta reacción esencialmente irreversible y catalizada por una enzima alostérica es llevada a cabo gracias al acoplamiento con la hidrólisis de ATP</div> <div class="dragItem" draggable="true">El sustrato de esta reacción es G3P el cual fue fosforilado y oxidado</div> <div class="dragItem" draggable="true">En esta reacción se produce una transferencia intramolecular del fosforilo</div> <div class="dragItem" draggable="true">Si se parte desde glucosa la reacción es catalizada por hexoquinasas pero si se parte desde glucógeno es catalizada sucesivamente por fosforilasa y fosfoglucomutasa</div> <div class="dragItem" draggable="true">En esta reacción se produce una deshidratación y redistribución intramolecular en el 2-fosfoglicerato</div> <div class="dragItem" draggable="true">En esta reacción la energía liberada es utilizada para introducir ortofosfato (P1) del medio y formar 13-bisfosfoglicerato</div> <div class="dragItem" draggable="true">Esta es una reacción irreversible en la cual hay potencial de transferencia suficiente para ceder fosfato a ADP y formar ATP</div> <div class="dragItem" draggable="true">Por un proceso de isomerización la glucosa-6-fosfato es convertida en…</div> <div class="dragItem" draggable="true">Esta reacción ocurre únicamente cuando el piruvato formado toma un camino que se encuentra en condiciones de anaerobiosis</div> <div class="dragItem" draggable="true">La reacción es catalizada en ambos sentidos por una liasa</div> </div> <!-- Columna de emparejamiento con las cajas vacías a la derecha en la parte superior --> <div class="dragColumn" id="dropColumn" style="float:right; width: 300px;"> <div class="matchPair"> <div class="dropBox" data-pair="Formación de triosas-fosfato,La reacción es catalizada en ambos sentidos por una liasa"></div> <div class="dropBox" data-pair="Formación de triosas-fosfato,La reacción es catalizada en ambos sentidos por una liasa"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Oxidación y fosforilación del gliceraldehído-3-fosfato,En esta reacción la energía liberada es utilizada para introducir ortofosfato (P1) del medio y formar 13-bisfosfoglicerato"></div> <div class="dropBox" data-pair="Oxidación y fosforilación del gliceraldehído-3-fosfato,En esta reacción la energía liberada es utilizada para introducir ortofosfato (P1) del medio y formar 13-bisfosfoglicerato"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Formación de glucosa-6-fosfato,Si se parte desde glucosa la reacción es catalizada por hexoquinasas pero si se parte desde glucógeno es catalizada sucesivamente por fosforilasa y fosfoglucomutasa"></div> <div class="dropBox" data-pair="Formación de glucosa-6-fosfato,Si se parte desde glucosa la reacción es catalizada por hexoquinasas pero si se parte desde glucógeno es catalizada sucesivamente por fosforilasa y fosfoglucomutasa"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Formación de fructosa-6-fosfato,Por un proceso de isomerización la glucosa-6-fosfato es convertida en…"></div> <div class="dropBox" data-pair="Formación de fructosa-6-fosfato,Por un proceso de isomerización la glucosa-6-fosfato es convertida en…"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Fosforilación de fructosa-6-fosfato,Esta reacción esencialmente irreversible y catalizada por una enzima alostérica es llevada a cabo gracias al acoplamiento con la hidrólisis de ATP"></div> <div class="dropBox" data-pair="Fosforilación de fructosa-6-fosfato,Esta reacción esencialmente irreversible y catalizada por una enzima alostérica es llevada a cabo gracias al acoplamiento con la hidrólisis de ATP"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Interconversión de triosas-fosfato,El sustrato de esta reacción es G3P el cual fue fosforilado y oxidado"></div> <div class="dropBox" data-pair="Interconversión de triosas-fosfato,El sustrato de esta reacción es G3P el cual fue fosforilado y oxidado"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Fosforilación a nivel de sustrato,Es la primera reacción de glicólisis en la que se produce una conservación de energía"></div> <div class="dropBox" data-pair="Fosforilación a nivel de sustrato,Es la primera reacción de glicólisis en la que se produce una conservación de energía"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Formación de 2-fosfoglicerato,En esta reacción se produce una transferencia intramolecular del fosforilo"></div> <div class="dropBox" data-pair="Formación de 2-fosfoglicerato,En esta reacción se produce una transferencia intramolecular del fosforilo"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Formación de fosfoenolpiruvato,En esta reacción se produce una deshidratación y redistribución intramolecular en el 2-fosfoglicerato"></div> <div class="dropBox" data-pair="Formación de fosfoenolpiruvato,En esta reacción se produce una deshidratación y redistribución intramolecular en el 2-fosfoglicerato"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Segunda fosforilación a nivel de sustrato,Esta es una reacción irreversible en la cual hay potencial de transferencia suficiente para ceder fosfato a ADP y formar ATP"></div> <div class="dropBox" data-pair="Segunda fosforilación a nivel de sustrato,Esta es una reacción irreversible en la cual hay potencial de transferencia suficiente para ceder fosfato a ADP y formar ATP"></div> </div> <div class="matchPair"> <div class="dropBox" data-pair="Formación de lactato,Esta reacción ocurre únicamente cuando el piruvato formado toma un camino que se encuentra en condiciones de anaerobiosis"></div> <div class="dropBox" data-pair="Formación de lactato,Esta reacción ocurre únicamente cuando el piruvato formado toma un camino que se encuentra en condiciones de anaerobiosis"></div> </div> </div> </div> <button class="btn" onclick="checkMatch()">Verificar Uniones</button> <div id="matchResult"></div> <button class="btn" onclick="showSection('home')">Volver al Inicio</button> </div>    <script>
+       const questions = [
+    {question: "¿Cuál es la definición de la glucólisis?", options: ["Es la principal vía de síntesis de glucosa, donde una molécula de glucosa se descompone en aminoácidos y produce energía únicamente en presencia de oxígeno.", "Es una via metabólica que convierte la glucosa en dos lactato, pero en ausencia de oxígeno produce dos piruvato. ", " Es la vía principal de la glucogénesis, donde la glucosa se convierte en lactato y se utiliza principalmente para la respiracion celular.", "Es una vía metabólica, en la cual una molécula de glucosa es desdoblada en dos piruvato y se produce energía."], correct: 3},
+    {question: "¿Cuáles son las 3 enzimas reguladoras?", options: ["Glucosa-6-fosfataso, aldolasa y enolasa.", "hexoquinosa, fosfofructoquinosa y piruvato quinasa", "Piruvato quinasa, hexoquinasa, fosfogliceratoquinasa", "Fosfoglucoisomerasa, aldolasa, gliceraldehido-3-fosfato."], correct: 1},
+    {question: "¿Qué coenzima funciona como factor limitante?", options: ["NAD+ Reducido", "NAD+ oxidado", "NADH+H+", "NADH"], correct: 1},
+    {question: "¿Cuál es la ubicación tisular y celular de la glucólisis?", options: ["En el citosol de las células de todos los tejidos", "En el mitocondria de las células nerviosas", "En el citoplasma.", "En la membrana plasmática de las células sanguíneas."], correct: 0},
+    {question: "En el paso 1, (formación de glucosa-6-fosfato) se fosforiliza la glucosa en el carbono 6 y al mismo tiempo...", options: ["Se acopla a la síntesis del ATP", "Se acopla a la desfosforilación del carbono 1", "Se acopla a la hidrólisis del ATP", "Se acopla a la transferencia de un grupo acetilo"], correct: 2},
+    {question: "El paso 2 es un proceso de ..... y es catalizado por la enzima...", options: ["Reducción, Hexoquinasa", "Oxidación, glucosa-6-fosfato", "Hidrolización, glucosa-6-fosfato deshidrogenasa", "Isomerización, fosfoglucoisomerasa"], correct: 3},
+    {question: "La enzima fosfofructoquinasa 1, lleva ese nombre porque...", options: ["Porque agrega un fosfato en el carbono 1 a la glucosa-6-fosfato, que originalmente tenía un fosfato en el carbono 6", "Porque elimina un fosfato en el carbono 1 de la fructosa-1,6-bisfosfato, la cual tenía dos fosfatos en los carbonos 1 y 6", "Porque agrega 1 fosfato en el carbono 1 a la fructosa-6-fosfato, la cual solo tenía un fosfato en el carbono 6", "Porque transfiere un fosfato del carbono 1 de la fructosa-6-fosfato al carbono 6 de la glucosa-6-fosfato"], correct: 2},
+    {question: "La mayoría de las reacciones endergónicas se acoplan a una...", options: ["Exergónica", "Otra endergónica", "Anabólica", "Catabólica"], correct: 0},
+    {question: "¿Cómo es la DHAP convertida en G3P, para poder seguir su camino en la glucólisis? Elige la cita correcta.", options: ["Mediante la conversión irreversible de las triosas por acción de la aldosa reductasa.", "Gracias a la conversión reversible de las triosas por acción de triosa-fosfato isomerasa", "Gracias a la conversión irreversible de las fructosas por acción de triosa-fosfato isomerasa", "No participa ninguna enzima."], correct: 1},
+    {question: "¿Cómo se convierte el NAD+ en NADH+H+?", options: ["El NAD+ se oxida al liberar un grupo fosfato, convirtiéndose en NADH+H+.", "El NAD+ se une a una molécula de agua y se convierte en NADH+H+ mediante hidrólisis.", "El NAD+ agarra los hidrógenos liberados antes, se reduce y se convierte en NADH+H+.", "El NAD+ libera más hidrógenos, se oxida y se convierte en NADH+H+."], correct: 2},
+    {question: "En esta etapa, la célula aprovecha para agarrar ADP y convertirlo en ATP, debido a la gran cantidad de energía liberada. ¿Qué etapa es?", options: ["Fosforilación a nivel de sustrato.", "Formación de 2-fosfoglicerato.", "Formación de fosfoenolpiruvato.", "Formación de triosas-fosfato."], correct: 0},
+    {question: "El fosfoglicerato es convertido en 2-fosfoglicerato por...", options: ["Transferencia intermolecular del fosforilo.", "Desfosforilación del 3-fosfoglicerato.", "Transferencia celular del fosfoglicerato.", "Transferencia intramolecular del fosforilo."], correct: 3},
+    {question: "¿Por qué el enlace fosfato en fosfoenol piruvato adquiere elevada energía libre de hidrólisis?", options: ["Debido a la oxidación del fosfoenolpiruvato, que genera mayor cantidad de energía libre.", "Debido a la pérdida de una molécula de agua, la cual produce una gran redistribución de la energía del 2-fosfoglicerato.", "Debido a la fosforilación a nivel de sustrato, en la cual se libera energía.", "Debido a la adición de un grupo fosfato en el fosfoenol piruvato."], correct: 1},
+    {question: "El fosfoenol piruvato tiene.... suficiente para ceder fosfato a ADP y formar ATP.", options: ["Potencial de oxidación", "Energía Libre", "Potencial de transferencia", "Potencial de reducción"], correct: 1},
+    {question: "Si la célula se encuentra en condiciones de anaerobiosis, convertirá el piruvato en lactato y....", options: ["Asegurará la reoxidación del NADH+H+.", "Irá a la mitocondria a realizar respiración celular.", "Formará aminoácidos esenciales.", "Evitará la acumulación de CO2 en la célula."], correct: 0},
+    {question: "¿Qué función cumple el piruvato en condiciones de aerobiosis?", options: ["Se convierte en lactato", "Respiración celular (en la mitocondria)", "Reoxida al NADH+H+", "Síntesis de proteínas"], correct: 1}
+];
+
+    
+ const steps = [ "Formación de glucosa-6-fosfato", "Formación de fructosa-6-fosfato", "Fosforilación de la fructosa-6-fosfato", "Formación de triosas-fosfato", "Interconversión de triosas-fosfato", "Oxidación y fosforilación del gliceraldehído-3-fosfato", "Fosforilación a nivel de sustrato", "Formación de 2-fosfoglicerato", "Formación de fosfoenolpiruvato", "Segunda fosforilación a nivel de sustrato" ]; function showSection(sectionId) { document.getElementById('home').style.display = 'none'; document.getElementById('quiz').style.display = 'none'; document.getElementById('orderGame').style.display = 'none'; document.getElementById('matchGame').style.display = 'none'; document.getElementById(sectionId).style.display = 'block'; if (sectionId === 'quiz' && document.getElementById('questions').innerHTML === '') { loadQuiz(); } else if (sectionId === 'orderGame' && document.getElementById('steps').innerHTML === '') { loadOrderGame(); } else if (sectionId === 'matchGame') { loadMatchGame(); } } function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; } function loadOrderGame() { const shuffledSteps = shuffleArray([...steps]); // Desordenar los pasos
+         let stepsHtml = shuffledSteps .map(step => `<li class="step" draggable="true">${step}</li>`) .join(''); document.getElementById('steps').innerHTML = stepsHtml; makeSortable('steps'); } function makeSortable(containerID) { let container = document.getElementById(containerID); let items = container.getElementsByClassName('step'); let currentDraggedItem; for (let i = 0; i < items.length; i++) { items[i].addEventListener('dragstart', dragStart); items[i].addEventListener('dragover', dragOver); items[i].addEventListener('drop', drop); } function dragStart(e) { currentDraggedItem = e.target; e.dataTransfer.setData('text/plain', null); e.target.classList.add('dragging'); } function dragOver(e) { e.preventDefault(); let afterElement = getDragAfterElement(container, e.clientY); if (afterElement == null) { container.appendChild(currentDraggedItem); } else { container.insertBefore(currentDraggedItem, afterElement); } } function drop(e) { e.preventDefault(); currentDraggedItem.classList.remove('dragging'); } function getDragAfterElement(container, y) { let draggableElements = [...container.querySelectorAll('.step:not(.dragging)')]; return draggableElements.reduce((closest, child) => { let box = child.getBoundingClientRect(); let offset = y - box.top - box.height / 2; if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; } else { return closest; } }, { offset: Number.NEGATIVE_INFINITY }).element; } } function checkOrder() { let userOrder = Array.from(document.getElementById('steps').children).map(el => el.textContent); let correct = steps.every((step, index) => step === userOrder[index]); document.getElementById('orderResult').innerHTML = correct ? "¡Correcto!" : "Hay un error en el orden."; }
+
+         function loadQuiz() {
+            let quizHtml = questions.map((q, index) => `
+                <div class="question">
+                    <p>${index + 1}. ${q.question}</p>
+                    ${q.options.map((option, i) => `
+                        <label><input type="radio" name="q${index}" value="${i}">${option}</label><br>
+                    `).join('')}
+                </div>
+            `).join('');
+            document.getElementById('questions').innerHTML = quizHtml;
+        }
+
+        function checkAnswers() {
+            let score = questions.reduce((acc, q, i) => {
+                let selected = document.querySelector(`input[name="q${i}"]:checked`);
+                return acc + (selected && parseInt(selected.value) === q.correct ? 1 : 0);
+            }, 0);
+            document.getElementById('result').innerHTML = `Tu puntuación: ${score} de ${questions.length}`;
+        }
+         function loadMatchGame() {
+            let dragItems = document.querySelectorAll('.dragItem');
+            let dropBoxes = document.querySelectorAll('.dropBox');
+
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', dragStart);
+                item.addEventListener('dragend', dragEnd);
+            });
+
+            dropBoxes.forEach(box => {
+                box.addEventListener('dragover', dragOver);
+                box.addEventListener('dragenter', dragEnter);
+                box.addEventListener('dragleave', dragLeave);
+                box.addEventListener('drop', drop);
+            });
+        }
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+            e.target.style.opacity = '0.5';
+        }
+
+        function dragEnd(e) {
+            e.target.style.opacity = '1';
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            e.target.classList.add('hover');
+        }
+
+        function dragLeave(e) {
+            e.target.classList.remove('hover');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            e.target.classList.remove('hover');
+            
+            let data = e.dataTransfer.getData('text/plain');
+            let dropTarget = e.target.classList.contains('dropBox') ? e.target : e.target.closest('.dropBox');
+            
+            if (dropTarget && !dropTarget.querySelector('.matchItem')) {
+                let matchItem = document.createElement('div');
+                matchItem.classList.add('matchItem');
+                matchItem.textContent = data;
+                dropTarget.appendChild(matchItem);
+            }
+        }
+
+        function checkMatch() {
+            let correctMatches = 0;
+            let totalPairs = document.querySelectorAll('.matchPair').length;
+            let allItems = Array.from(document.querySelectorAll('.matchItem')).map(item => item.textContent);
+
+            document.querySelectorAll('.matchPair').forEach(pair => {
+                let boxes = pair.querySelectorAll('.dropBox');
+                let correctPair = boxes[0].getAttribute('data-pair').split(',');
+                
+                if (correctPair.every(item => allItems.includes(item))) {
+                    correctMatches++;
+                }
+            });
+
+            document.getElementById('matchResult').textContent = `Tienes ${correctMatches}/${totalPairs} emparejamientos correctos.`;
+
+            if (correctMatches === totalPairs) {
+                document.getElementById('matchResult').textContent += ' ¡Felicidades, has completado el juego correctamente!';
+            } else {
+                document.getElementById('matchResult').textContent += ' Sigue intentando para mejorar tu puntuación.';
+            }
+        }
+    </script>
+</body>
+</html>
